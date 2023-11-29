@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<ht lang="ja">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>焚火イベント</title>
+        <style>
+            #output li {
+                background: #ccc;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>焚火イベント予約</h1>
+
+        <h2>イベント概要</h2>
+
+
+        <h2>お申し込みはこちらから</h2>
+        <!-- 入力場所を作成しよう -->
+        <form>
+            <fieldset>
+                <legend>入力画面</legend>
+                <div>
+                    名 前: <input type="text" id="name" placeholder="ニックネームでOK">
+                </div>
+                <div>
+                    住 所: <input type="text" id="address" placeholder="市町村まででOK">
+                </div>
+                <div>
+                    性 別: <label for="gender"><input type="radio" id="Male">男性</label>
+                    <label for="gender"><input type="radio" id="Female">女性</label>
+                    <label for="gender"><input type="radio" id="agender">答えたくない</label>
+                </div>
+                <div>
+                    電話番号: <label for="tel"><input type="tel" id="tel" placeholder="080-xxxx-xxxx"></label>
+                </div>
+                <div>
+                    メールアドレス: <label for="email"><input type="email" id="email" placeholder="test@test.com"></label>
+                </div>
+                <div>
+                    <label for="event">日時を選択</label>
+                    <select id="event">
+                        <option value="satAm">12月2日 土曜日 10:00～12:00</option>
+                        <option value="satPm">12月2日 土曜日 14:00～16:00</option>
+                        <option value="sunAm">12月3日 日曜日 10:00～12:00</option>
+                        <option value="sunPm">12月3日 日曜日 14:00～16:00</option>
+                    </select>
+                </div>
+                <div>
+                    会場までの送迎: <label for="taxi"><input type="radio" id="ari">送迎あり</label>
+                    <label for="taxi"><input type="radio" id="nasi">送迎なし</label>
+                </div>
+
+
+                <div>
+                    <button type="button" id="send">送信する</button>
+                </div>
+            </fieldset>
+        </form>
+
+        <!-- データ出力場所 -->
+        <h2>予約者一覧</h2>
+        <ul id="output"></ul>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script>
+            // 日時をいい感じの形式にする関数
+            function convertTimestampToDatetime(timestamp) {
+                const _d = timestamp ? new Date(timestamp * 1000) : new Date();
+                const Y = _d.getFullYear();
+                const m = (_d.getMonth() + 1).toString().padStart(2, '0');
+                const d = _d.getDate().toString().padStart(2, '0');
+                const H = _d.getHours().toString().padStart(2, '0');
+                const i = _d.getMinutes().toString().padStart(2, '0');
+                const s = _d.getSeconds().toString().padStart(2, '0');
+                return `${Y}/${m}/${d} ${H}:${i}:${s}`;
+            }
+        </script>
+        <!-- 以下にfirebaseのコードを貼り付けよう -->
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+
+            // 講義資料より貼り付け
+            import {
+                getFirestore,
+                collection,
+                addDoc,
+                serverTimestamp,
+                query,
+                orderBy,
+                onSnapshot,
+            } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";  // ここまで
+
+            const firebaseConfig = {
+                // ここにAPIキー入れる
+                authDomain: "event-reserve-test.firebaseapp.com",
+                projectId: "event-reserve-test",
+                storageBucket: "event-reserve-test.appspot.com",
+                messagingSenderId: "59545915105",
+                appId: "1:59545915105:web:1f89152ce2b581607531a0"
+            };
+
+            const app = initializeApp(firebaseConfig);
+
+            // 講義資料より
+            const db = getFirestore(app);  // ここまで
+
+            // <!-- firebaseのコード ここまで -->
+
+            // firebaseにデータを送る
+            $("#send").on('click', function () {
+                const postData = {
+                    name: $("#name").val(),
+                    address: $("#address").val(),
+                    tel: $("#tel").val(),
+                    email: $("#email").val(),
+                    time: serverTimestamp(),
+                };
+                console.log(data);
+                addDoc(collection(db, "reserve"), postData);
+                $("#text").val("");
+            });
+
+            const q = query(collection(db, "reserve"), orderBy("time", "desc"));
+
+            // firebaseからデータを取得
+            onSnapshot(q, (querySnapshot) => {
+                console.log(querySnapshot.docs);
+
+
+                // データをオブジェクト形式の配列に変換
+                const documents = [];
+                querySnapshot.docs.forEach(function (doc) {
+                    const document = {
+                        id: doc.id,
+                        data: doc.data(),
+                    };
+                    documents.push(document);
+                });
+
+                console.log(documents);
+
+                // 画像表示するためのタグ生成
+                const htmlElements = [];
+                documents.forEach(function (document) {
+                    htmlElements.push(`
+                <li id="${document.id}">
+                <p>${document.data.name} at ${convertTimestampToDatetime(document.data.time.seconds)}</p>
+                <p>${document.data.address}</p>
+                <p>${document.data.tel}</p>
+                <p>${document.data.email}</p>
+                </li>
+                `);
+                });
+
+                $("#output").html(htmlElements);
+
+                // onSnapshotの最後のかっこ
+            });
+
+        </script>
+
+
+    </body>
+
+    </html>
