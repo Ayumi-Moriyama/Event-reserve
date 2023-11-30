@@ -3,9 +3,10 @@ body{
     padding:0;
     text-align:left;
     font-size: 32px;
+    background-color: rgb(220, 198, 188);
 }
 header{
-    background-color: #fff;
+    background-color: rgb(172, 039, 056);
     border-bottom: 1px solid #ccc;
     text-align: center;
 }
@@ -41,4 +42,9 @@ li{
 li:hover{
     background: #0066CC;
     color:#fff;
+}
+
+.takibiImage{
+    display: flex;
+    justify-content: space-around;
 }
