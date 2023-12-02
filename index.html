@@ -8,30 +8,49 @@
         <title>焚火イベント</title>
         <style>
             #output li {
-                background: #ccc;
+                background: rgb(210, 163, 108);
             }
         </style>
-        <!-- <link rel="stylesheet" href="css/sample.css"> -->
+        <link rel="stylesheet" href="css/sample.css">
     </head>
 
     <body>
-        <h1>焚火イベント予約</h1>
+        <header>
+            <h1>焚火イベント予約</h1>
+        </header>
+
 
         <img class="takibiImage" src="./images/takibi.png" alt="">
 
-        <h2>イベント概要</h2>
-        <div>
-            <p>焚火が楽しめる季節がやってきました。</p>
-            <p>下記日程で焚火イベントを開催いたします。</p>
-            <ul>
-                <li>12月2日 土曜日 10:00～12:00</li>
-                <li>12月2日 土曜日 14:00～16:00</li>
-                <li>12月3日 日曜日 10:00～12:00</li>
-                <li>12月3日 日曜日 14:00～16:00</li>
-            </ul>
-            <p>※各回先着10名様まで</p>
-            <p>焚火を囲んで暖かい時間を過ごしましょう</p>
-        </div>
+        <section class="summary">
+            <h2>イベント概要</h2>
+            <div>
+                <p>焚火が楽しめる季節がやってきました。</p>
+                <p>下記日程で焚火イベントを開催いたします。</p>
+                <ul>
+                    <li>①12月2日 土曜日 10:00～12:00
+                        <button id="btn1">①参加者を確認</button>
+                    </li>
+                    <li>②12月2日 土曜日 14:00～16:00
+                        <button id="btn2">②参加者を確認</button>
+                    </li>
+                    <li>③12月3日 日曜日 10:00～12:00
+                        <button id="btn3">③参加者を確認</button>
+                    </li>
+                    <li>④12月3日 日曜日 14:00～16:00
+                        <button id="btn4">④参加者を確認</button>
+                    </li>
+                </ul>
+                <p>※各回先着10名様まで</p>
+                <div>
+                    <h3>開催場所</h3>
+                    <p>IMAJUKU CAMP BASE (福岡市西区今宿上ノ原217-2)</p>
+                    <p>※姪浜駅より送迎タクシーあり。（往復￥500 /人）</p>
+                </div>
+                <p>焚火を囲んで暖かい時間を過ごしましょう</p>
+            </div>
+        </section>
+
 
 
         <h2>お申し込みはこちらから</h2>
@@ -79,7 +98,9 @@
 
         <!-- データ出力場所 -->
         <h2>予約者一覧</h2>
+        <input type="button" id="btnItiran" value="一覧を表示／非表示">
         <ul id="output"></ul>
+
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script>
@@ -111,12 +132,12 @@
             } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";  // ここまで
 
             const firebaseConfig = {
-                // APIキーをここに入れる
-                authDomain: "event-reserve-test.firebaseapp.com",
-                projectId: "event-reserve-test",
-                storageBucket: "event-reserve-test.appspot.com",
-                messagingSenderId: "59545915105",
-                appId: "1:59545915105:web:1f89152ce2b581607531a0"
+                apiKey: "",
+                authDomain: "",
+                projectId: "",
+                storageBucket: "",
+                messagingSenderId: "",
+                appId: ""
             };
 
             const app = initializeApp(firebaseConfig);
@@ -124,7 +145,10 @@
             // 講義資料より
             const db = getFirestore(app);  // ここまで
 
-            // <!-- firebaseのコード ここまで -->
+            // <!-- firebaseのコード ここまで -->    
+
+            // 予約者一覧をトグルで表示・非表示したい（未実装）
+            // $('#output').toggle();
 
             // firebaseにデータを送る
 
@@ -140,9 +164,10 @@
                     taxi: $("input[name='taxi']:checked").val(),
                     time: serverTimestamp(),
                 };
-                // console.log(gender);
                 addDoc(collection(db, "reserve"), postData);
                 $("#text").val("");
+                console.log(postData.name + "様　ご予約ありがとうございます。");
+                console.log(postData.takibiEvent + "で承りました。")
             });
 
             const q = query(collection(db, "reserve"), orderBy("time", "desc"));
@@ -182,8 +207,14 @@
 
                 $("#output").html(htmlElements);
 
+                // トグルで一覧を表示させたい（未実装）
+                // $("#btnIchiran").click(function () {
+                //     $("#output").toggle();
+                // });
+
                 // onSnapshotの最後のかっこ
             });
+
 
         </script>
 

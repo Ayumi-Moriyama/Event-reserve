@@ -1,50 +1,43 @@
-body{
-    margin:0;
-    padding:0;
-    text-align:left;
-    font-size: 32px;
-    background-color: rgb(220, 198, 188);
-}
-header{
-    background-color: rgb(172, 039, 056);
-    border-bottom: 1px solid #ccc;
-    text-align: center;
-}
-main{
-    border-bottom:1px solid #ccc;
-}
-footer{
-    background-color: #fff;
-    border-bottom:1px solid #ccc;
-    text-align: center;
-}
-p{
-    font-size:200%;
-    text-align: center;
-    border-bottom:1px solid #fff;
-    height:200px;
-}
-ul{
-    padding: 0;
-    border-top: 1px solid #000000;
-    display:table;  /* 定義 */
-    table-layout: fixed;
-    width:100%;
-}
-li{
-    text-align: center;
-    list-style-type:none;
-    border: 1px solid #666;
-    background-color: #FFF;
-    display:table-cell;  /* 定義 */
-    cursor: pointer;
-}
-li:hover{
-    background: #0066CC;
-    color:#fff;
+body {
+    background-color: rgb(251, 246, 240);
 }
 
-.takibiImage{
+header {
+    background-color: rgb(176, 107, 066);
+    text-align: center;
+}
+
+h1 {
+    font-weight: bold;
+}
+
+h2 {
+    background-color: rgb(176, 107, 066);
+}
+
+.takibiImage {
+    height: 80%;
+    width: 80%;
+    margin-left: 150px;
     display: flex;
     justify-content: space-around;
+    text-align: center;
+}
+
+.summary {
+    font-size: large;
+    text-align: center;
+}
+
+.summary ul {
+    display: grid;
+    justify-content: space-around;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.summary ul li{
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
